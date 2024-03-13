@@ -1,5 +1,5 @@
 import Home from './pages/Home';
-import Game from './pages/Game';
+import GamePage from './pages/GamePage';
 import Header from "./components/Header";
 import {
   createBrowserRouter,
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/game",
-    element: <Game />,
+    element: <GamePage />,
   },
 ]);
 
