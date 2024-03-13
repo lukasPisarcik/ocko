@@ -7,7 +7,7 @@ const Home = () => {
       <>    
         <div className="p-4 mt-10 w-11/12 flex justify-center align-middle m-auto gap-20 flex-col">
           <h1 className="scroll-m-20 text-6xl font-extrabold tracking-tight lg:text-6xl">
-            Vitaj spat Lukas Pisarcik 👋      
+            Vitaj spat Pirat 🏴‍☠️👋    
           </h1>
           <p className="text-md text-muted-foreground">
             Tato aplikacia sluzi ako pomocka pri hre Ocko. Vytvorte si novu hru alebo pokracujte v poslednej.
