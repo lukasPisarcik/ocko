@@ -1,13 +1,5 @@
-import React, { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,23 +7,43 @@ import { Separator } from "@/components/ui/separator";
 import AddPlayer from "@/components/AddPlayer";
 import { Game } from '@/models/Game';
 import { Player } from '@/models/Player';
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { Cross2Icon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
-import { saveToLocalStorage } from '@/uttlis';
+import { saveToLocalStorage, getCurrentGame } from '@/uttlis';
+import { DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from './ui/drawer';
+import { Badge } from './ui/badge';
 
+interface NewGameProps {
+  isEdit?: boolean;
+  onSubmit: (updatedGame: Game) => void;
+}
 
-const NewGame: React.FC = () => {
+const NewGame: React.FC<NewGameProps> = ({ isEdit, onSubmit }) => {
   const [bank, setBank] = useState<number | ''>('');
   const [players, setPlayers] = useState<Player[]>([]);
   const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isEdit) {
+      const gameData = getCurrentGame();
+      if (gameData) {
+        setBank(gameData.bank);
+        setPlayers(gameData.players);
+      }
+    }
+  }, [isEdit]);
+
   const handleAddPlayer = (playerName: string) => {
     setPlayers([...players, { name: playerName, value: 0 }]);
+  };
+
+  const handleRemovePlayer = (index: number) => {
+    setPlayers(players.filter((_, i) => i !== index));
   };
 
   const handleSubmit = () => {
@@ -45,21 +57,18 @@ const NewGame: React.FC = () => {
         players: players,
       };
       saveToLocalStorage(game);
-      navigate('/game');
+      if (isEdit) onSubmit(game);
+      else navigate('/game');
     }
   };
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant={"secondary"}>Nova hra</Button>
-        </DialogTrigger>
-        <DialogContent className="w-11/12">
-          <DialogHeader>
-            <DialogTitle>Nova hra</DialogTitle>
-          </DialogHeader>
-          {error && 
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>{isEdit ? 'Upravit hru' : 'Nova hra'}</DrawerTitle>
+        </DrawerHeader>
+        {error && 
           <Alert variant="destructive">
               <ExclamationTriangleIcon className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
@@ -68,7 +77,7 @@ const NewGame: React.FC = () => {
               </AlertDescription>
           </Alert>
           }
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6 pb-0">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="bank" className="text-left">
                 Bank
@@ -86,26 +95,34 @@ const NewGame: React.FC = () => {
             <h4 className="scroll-m-20 text-l font-semibold tracking-tight text-center">
               Hraci
             </h4>
+            <div>
             {players.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center">
                 Zatial niesu pridany ziadny hraci
               </p>
             ) : (
               players.map((player, index) => (
-                <p key={index} className="text-sm text-muted-foreground text-center">
-                  {player.name}
-                </p>
+                <Badge variant="secondary" key={index} className='w-auto mr-1'>
+                  <p>{player.name}</p>
+                  <Cross2Icon className='ml-1' onClick={() => handleRemovePlayer(index)}></Cross2Icon>
+                </Badge>
               ))
             )}
+            </div>
             <br />
 
             <AddPlayer onAddPlayer={handleAddPlayer} />
           </div>
-          <DialogFooter>
-            <Button type="submit" onClick={handleSubmit}>Vytvorit hru</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <DrawerFooter>
+        {isEdit ? 
+          <DrawerClose asChild>
+            <Button type="submit" onClick={handleSubmit}>Upravit hru'</Button>
+          </DrawerClose>
+            :
+          <Button type="submit" onClick={handleSubmit}>Vytvorit hru</Button>
+        }
+        </DrawerFooter>
+      </DrawerContent>
     </>
   );
 };
