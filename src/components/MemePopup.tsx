@@ -11,11 +11,11 @@ const MemePopup: React.FC<MemePopupProps> = ({ memeType }) => {
     const getImageSource = (type: MemeEnum): string => {
         switch (type) {
             case MemeEnum.WIN:
-                return "src/assets/money.gif";
+                return "money.gif";
             case MemeEnum.LOSE:
-                return "src/assets/recover.gif";
+                return "recover.gif";
             case MemeEnum.BANK:
-                return "src/assets/skoda.jpg";
+                return "skoda.jpg";
             default:
                 return "";
         }
