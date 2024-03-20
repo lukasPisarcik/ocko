@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import ErrorPage from './pages/ErrorPage';
+import { ThemeProvider } from './theme-provider';
 
 const router = createBrowserRouter([
   {
@@ -25,8 +26,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <Header></Header>
-      <RouterProvider router={router} />
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Header></Header>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </>
   )
 }
