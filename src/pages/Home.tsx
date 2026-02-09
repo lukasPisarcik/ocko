@@ -2,12 +2,28 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import NewGame from "../components/NewGame";
 import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // import { Game } from "@/models/Game";
 
 const Home = () => {
     return ( 
       <>    
         <div className="p-4 mt-10 w-11/12 flex justify-center align-middle m-auto gap-20 flex-col">
+          <Alert>
+            <AlertTitle>Nová verzia k dispozícii</AlertTitle>
+            <AlertDescription>
+              Nová verzia aplikácie je dostupná na{" "}
+              <a
+                href="https://ockov2.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline font-medium"
+              >
+                ockov2.vercel.app
+              </a>
+              . Táto verzia bude odstránená do konca apríla.
+            </AlertDescription>
+          </Alert>
           <h1 className="scroll-m-20 text-6xl font-extrabold tracking-tight lg:text-6xl">
             Vitaj spat Pirat 🏴‍☠️👋    
           </h1>
